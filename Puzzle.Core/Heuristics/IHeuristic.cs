@@ -1,4 +1,4 @@
-﻿namespace Puzzle.Core;
+﻿namespace Puzzle.Core.Heuristics;
 
 public interface IHeuristic
 {

@@ -1,4 +1,6 @@
-﻿namespace Puzzle.Core;
+﻿using Puzzle.Core.Heuristics;
+
+namespace Puzzle.Core;
 
 public class Node
 {

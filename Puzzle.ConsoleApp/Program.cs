@@ -1,5 +1,6 @@
 ﻿using Puzzle.Core;
+using Puzzle.Core.Heuristics;
 
-var puzzle = new Puzzle.Core.Puzzle("C:/Users/kriol/Desktop/puzzle.txt");
+var puzzle = new Puzzle.Core.Puzzle(@"C:\users\macze\downloads\puzzle.txt");
 
-puzzle.AStar(new Hamming());
+puzzle.AStar(new Manhattan());

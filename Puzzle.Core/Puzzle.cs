@@ -1,4 +1,5 @@
 ﻿using System.Runtime.InteropServices.JavaScript;
+using Puzzle.Core.Heuristics;
 
 namespace Puzzle.Core;
 
@@ -14,25 +15,24 @@ public class Puzzle
     public void AStar(IHeuristic heuristic)
     {
         var mainNode = new Node(heuristic, Board);
-        var openList = new List<Node>();
-        var closedList = new List<Node>();
+        var openList = new PriorityQueue<Node, int>();
+        var visited = new List<Node>();
         const string order = "LURD";
         var iter = 0;
 
-        openList.Add(mainNode);
+        openList.Enqueue(mainNode, mainNode.F);
 
         while (true)
         {
-            var minVal = openList.OrderBy(x => x.F).First();
-            
-            openList.Remove(minVal);
-            closedList.Add(minVal);
-            
+            var minVal = openList.Dequeue();
+            visited.Add(minVal);
+
             Console.WriteLine(++iter);
-            // minVal.Board.DisplayBoard();
-            // Console.WriteLine();
-            // Console.ReadKey();
-            
+            // Console.WriteLine(minVal.H);
+            minVal.Board.DisplayBoard();
+            Console.WriteLine();
+            Console.ReadKey();
+
             if (minVal.Board.CheckBoard())
             {
                 return;
@@ -45,8 +45,7 @@ public class Puzzle
                 // {
                 //     continue;
                 // }
-                
-                var existingBoard = false;
+
                 var board = new Board(minVal.Board);
 
                 // ten przypadek istnieje - brak ruchu
@@ -56,36 +55,22 @@ public class Puzzle
                 }
 
                 // ten przypadek istnieje - juz sprawdzony
-                foreach (var node in closedList)
+                var alreadyVisited = visited.Any(x => Helper.CompareBoards(x.Board, board));
+                if (alreadyVisited)
                 {
-                    if (Helper.CompareBoards(board, node.Board))
-                    {
-                        existingBoard = true;
-                        break;
-                    }
-                }
-                
-                // ten przypadek istnieje - czeka na sprawdzenie
-                foreach (var node in openList)
-                {
-                    if (Helper.CompareBoards(board, node.Board))
-                    {
-                        existingBoard = true;
-                        break;
-                    }
+                    continue;
                 }
 
-                if (existingBoard)
+                // ten przypadek istnieje - czeka na sprawdzenie
+                var presentInOpenList = openList.UnorderedItems.Any(x => Helper.CompareBoards(x.Element.Board, board));
+                if (presentInOpenList)
                 {
                     continue;
                 }
 
                 var newNode = new Node(heuristic, board, move, minVal);
-                openList.Add(newNode);
+                openList.Enqueue(newNode, newNode.F);
             }
         }
-        
     }
-
-
 }
