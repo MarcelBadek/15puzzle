@@ -17,7 +17,7 @@ public class Node
         Parent = parent;
         if (Parent is null)
         {
-            G = 1;
+            G = 0;
         }
         else
         {
@@ -25,6 +25,13 @@ public class Node
         }
         Board = board;
         H = heuristic.Calculate(Board);
+        Move = move;
+    }
+
+    public Node(Board board, char? move = null, Node? parent = null)
+    {
+        Parent = parent;
+        Board = board;
         Move = move;
     }
 }
