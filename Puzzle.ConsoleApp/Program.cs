@@ -2,13 +2,15 @@
 using Puzzle.Core;
 using Puzzle.Core.Heuristics;
 
-var puzzle = new Puzzle.Core.Puzzle(@"C:\Users\kriol\Desktop\puzzle.txt");
+var puzzle = new Puzzle.Core.Puzzle(@"C:\Users\macze\Downloads\puzzle.txt");
 
 puzzle.Board.DisplayBoard();
 var time = new Stopwatch();
 time.Start();
-//puzzle.AStar(new Manhattan());
-puzzle.BreadthFirstSearch("LURD");
+puzzle.AStar(new Hamming());
+// puzzle.BreadthFirstSearch("LURD");
 time.Stop();
 Console.WriteLine(time.ElapsedMilliseconds);
-puzzle.Board.DisplayBoard();
+
+var board = new Board(@"C:\Users\macze\Downloads\puzzle.txt");
+board.CheckBoard();
