@@ -10,10 +10,14 @@ public class Manhattan : IHeuristic
             for (int col = 0; col < board.Columns; col++)
             {
                 var curr = board.Fields[row, col];
-                var rowPos = curr - 1 / board.Columns;
-                var colPos = curr - 1 % board.Columns;
-                var distance = Math.Abs(row - rowPos) + Math.Abs(col - colPos);
-                result += distance;
+                if (curr != 0)
+                {
+                    curr--;
+                    var rowPos = curr / board.Columns;
+                    var colPos = curr % board.Columns;
+                    var distance = Math.Abs(row - rowPos) + Math.Abs(col - colPos);
+                    result += distance;
+                }
             }
         }
 

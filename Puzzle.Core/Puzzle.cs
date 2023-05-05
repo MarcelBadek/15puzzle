@@ -1,6 +1,8 @@
-﻿using System.Runtime.InteropServices.JavaScript;
+using System.Runtime.InteropServices.JavaScript;
 using System.Threading.Channels;
 using Puzzle.Core.Heuristics;
+using Puzzle.Core.Heuristics;
+
 
 namespace Puzzle.Core;
 
@@ -15,7 +17,7 @@ public class Puzzle
 
     public void AStar(IHeuristic heuristic)
     {
-        var mainNode = new Node(heuristic, Board);
+        var startNode = new Node(heuristic, Board);
         var openList = new PriorityQueue<Node, int>();
         var visited = new List<Node>();
         const string order = "LURD";
@@ -25,34 +27,47 @@ public class Puzzle
         {
             return;
         }
+        
+        var path = string.Empty;
 
-        openList.Enqueue(mainNode, mainNode.F);
+        openList.Enqueue(startNode, startNode.F);
 
         while (true)
         {
-            var minVal = openList.Dequeue();
-            visited.Add(minVal);
+            var current = openList.Dequeue();
+            visited.Add(current);
 
             Console.WriteLine(++iter);
             // Console.WriteLine(minVal.H);
             // minVal.Board.DisplayBoard();
             // Console.WriteLine();
             // Console.ReadKey();
+            Console.WriteLine("F:" + current.F);
 
-            if (minVal.Board.CheckBoard())
+            if (current.H == 0)
             {
+                var solvedBoard = current.Board;
+                while (current.Parent is not null)
+                {
+                    path += current.Move;
+                    current = current.Parent;
+                }
+
+                path = string.Concat(path.ToCharArray().Reverse());
+
+                Console.WriteLine(path);
                 return;
             }
 
             foreach (var move in order)
             {
                 // ten przypadek istnieje - uno ruch
-                if (minVal.Move == Helper.GetReverseMove(move))
+                if (current.Move == Helper.GetReverseMove(move))
                 {
                     continue;
                 }
 
-                var board = new Board(minVal.Board);
+                var board = new Board(current.Board);
 
                 // ten przypadek istnieje - brak ruchu
                 if (!board.Move(move))
@@ -67,16 +82,14 @@ public class Puzzle
                     continue;
                 }
 
-                // ten przypadek istnieje - czeka na sprawdzenie
-                var presentInOpenList = openList.UnorderedItems.Any(x => Helper.CompareBoards(x.Element.Board, board));
-                if (presentInOpenList)
+                var newNode = new Node(board, move, current)
                 {
-                    continue;
-                }
-
-                var newNode = new Node(heuristic, board, move, minVal);
+                    H = heuristic.Calculate(board),
+                    G = current.G + 1
+                };
                 openList.Enqueue(newNode, newNode.F);
             }
+
         }
     }
 
@@ -143,6 +156,7 @@ public class Puzzle
         }
     }
 
+
     public bool DepthFirstSearch(string order, int maxDepth, int currentDepth = 0, Node? currNode = null)
     {
         Node currentNode;
@@ -168,6 +182,8 @@ public class Puzzle
             currentNode.Board.DisplayBoard();
             return true;
         }
+
+        openList.Enqueue(mainNode);
 
         Console.WriteLine(currentDepth);
         if (currentDepth == maxDepth)
