@@ -1,4 +1,8 @@
-﻿using Puzzle.Core.Heuristics;
+using System.Runtime.InteropServices.JavaScript;
+using System.Threading.Channels;
+using Puzzle.Core.Heuristics;
+using Puzzle.Core.Heuristics;
+
 
 namespace Puzzle.Core;
 
@@ -18,6 +22,12 @@ public class Puzzle
         var visited = new List<Node>();
         const string order = "LURD";
         var iter = 0;
+
+        if (mainNode.Board.CheckBoard())
+        {
+            return;
+        }
+        
         var path = string.Empty;
 
         openList.Enqueue(startNode, startNode.F);
@@ -146,22 +156,58 @@ public class Puzzle
         }
     }
 
-    public void DepthFirstSearch(string order, int maxOrder)
-    {
-        var mainNode = new Node(Board);
-        var openList = new Queue<Node>();
-        var visited = new List<Node>();
-        var iter = 0;
 
-        if (mainNode.Board.CheckBoard())
+    public bool DepthFirstSearch(string order, int maxDepth, int currentDepth = 0, Node? currNode = null)
+    {
+        Node currentNode;
+        if (currentDepth == 0)
         {
-            return;
+            currentNode = new Node(Board);
+        }
+        else
+        {
+            if (currNode is null)
+            {
+                throw new NullReferenceException();
+            }
+            else
+            {
+                currentNode = currNode;
+            }
+        }
+
+        if (currentNode.Board.CheckBoard())
+        {
+            Console.WriteLine("FOUND!!!!!!!!!!!");
+            currentNode.Board.DisplayBoard();
+            return true;
         }
 
         openList.Enqueue(mainNode);
 
-        while (true)
+        Console.WriteLine(currentDepth);
+        if (currentDepth == maxDepth)
         {
+            return false;
         }
+
+
+        foreach (var move in order)
+        {
+            var board = new Board(currentNode.Board);
+            if (!board.Move(move))
+            {
+                continue;
+            }
+
+            var newNode = new Node(board, move, currentNode);
+
+            if (DepthFirstSearch(order, maxDepth, currentDepth + 1, newNode))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

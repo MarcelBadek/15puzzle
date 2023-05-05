@@ -7,8 +7,6 @@ var puzzle = new Puzzle.Core.Puzzle(@"C:\Users\macze\Downloads\puzzle.txt");
 puzzle.Board.DisplayBoard();
 var time = new Stopwatch();
 time.Start();
-puzzle.AStar(new Hamming());
-// puzzle.BreadthFirstSearch("LURD");
 time.Stop();
 Console.WriteLine(time.ElapsedMilliseconds);
 
