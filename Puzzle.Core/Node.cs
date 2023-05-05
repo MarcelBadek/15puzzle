@@ -15,23 +15,6 @@ public class Node
     {
     }
 
-    public Node(IHeuristic heuristic, Board board, char? move = null, Node? parent = null)
-    {
-        Parent = parent;
-        if (Parent is null)
-        {
-            G = 0;
-        }
-        else
-        {
-            G = Parent.G + 1;
-        }
-
-        Board = board;
-        H = heuristic.Calculate(Board);
-        Move = move;
-    }
-
     public Node(Board board, char? move = null, Node? parent = null)
     {
         Parent = parent;

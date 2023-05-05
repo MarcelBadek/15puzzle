@@ -55,12 +55,6 @@ public class AStarSolver : ISolver
             foreach (var move in order)
             {
                 processedStates++;
-                // ten przypadek istnieje - uno ruch
-                if (current.Move == Helper.GetReverseMove(move))
-                {
-                    continue;
-                }
-
                 var newBoard = new Board(current.Board);
 
                 // ten przypadek istnieje - brak ruchu

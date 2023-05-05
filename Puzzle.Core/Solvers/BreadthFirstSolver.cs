@@ -50,11 +50,6 @@ public class BreadthFirstSolver : ISolver
             foreach (var move in _order)
             {
                 processedStates++;
-                if (currNode.Move == Helper.GetReverseMove(move))
-                {
-                    continue;
-                }
-
                 var newBoard = new Board(currNode.Board);
 
                 if (!newBoard.Move(move))
