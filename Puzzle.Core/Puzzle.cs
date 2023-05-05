@@ -89,6 +89,7 @@ public class Puzzle
 
         if (mainNode.Board.CheckBoard())
         {
+            visited.Add(mainNode);
             return;
         }
 
@@ -143,7 +144,67 @@ public class Puzzle
         }
     }
 
-    public bool DepthFirstSearch(string order, int maxDepth, int currentDepth = 0, Node? currNode = null)
+    public void DepthFirstSearch(string order, int maxDepth)
+    {
+        var iter = 0;
+        var stack = new Stack<Node>();
+        //var visited = new List<Node>();
+        var currNode = new Node(Board)
+        {
+            G = 0
+        };
+
+        if (currNode.Board.CheckBoard())
+        {
+            currNode.Board.DisplayBoard();
+            return;
+        }
+
+        stack.Push(currNode);
+
+        while (true)
+        {
+            currNode = stack.Pop();
+
+            if (currNode.Board.CheckBoard())
+            {
+                currNode.Board.DisplayBoard();
+
+                Console.WriteLine();
+                while (currNode.Parent != null)
+                {
+                    Console.Write(currNode.Move);
+                    currNode = currNode.Parent;
+                }
+                Console.WriteLine();
+                
+                return;
+            }
+
+            if (currNode.G == maxDepth)
+            {
+                continue;
+            }
+
+            foreach (var move in order.Reverse())
+            { 
+                var board = new Board(currNode.Board);
+
+                if (!board.Move(move))
+                {
+                    continue;
+                }
+
+                var newNode = new Node(board, move, currNode)
+                {
+                    G = currNode.G + 1
+                };
+                stack.Push(newNode);
+            }
+        }
+    }
+    
+    public bool DepthFirstSearchRec(string order, int maxDepth, int currentDepth = 0, Node? currNode = null)
     {
         Node currentNode;
         if (currentDepth == 0)
@@ -169,7 +230,7 @@ public class Puzzle
             return true;
         }
 
-        Console.WriteLine(currentDepth);
+        //Console.WriteLine(currentDepth);
         if (currentDepth == maxDepth)
         {
             return false;
@@ -186,7 +247,7 @@ public class Puzzle
 
             var newNode = new Node(board, move, currentNode);
 
-            if (DepthFirstSearch(order, maxDepth, currentDepth + 1, newNode))
+            if (DepthFirstSearchRec(order, maxDepth, currentDepth + 1, newNode))
             {
                 return true;
             }
@@ -194,4 +255,5 @@ public class Puzzle
 
         return false;
     }
+
 }

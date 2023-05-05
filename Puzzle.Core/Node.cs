@@ -9,9 +9,8 @@ public class Node
     public int H { get; set; }
     public int F => G + H;
     public Node? Parent { get; set; }
-
     public char? Move { get; set; }
-    
+
     public Node(IHeuristic heuristic, Board board, char? move = null, Node? parent = null)
     {
         Parent = parent;
