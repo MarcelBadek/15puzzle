@@ -13,38 +13,40 @@ public class DepthFirstSolver : ISolver
 
     public SolveResult Solve(Board board)
     {
+        var processedStates = 0;
         var stack = new Stack<Node>();
+        var visited = new List<Node>();
         var currNode = new Node(board)
         {
             G = 0
         };
-
-        if (currNode.Board.CheckBoard())
-        {
-            currNode.Board.DisplayBoard();
-            return new SolveResult();
-        }
 
         stack.Push(currNode);
 
         while (true)
         {
             currNode = stack.Pop();
+            visited.Add(currNode);
 
             if (currNode.Board.CheckBoard())
             {
-                currNode.Board.DisplayBoard();
-
-                Console.WriteLine();
-                while (currNode.Parent != null)
+                var path = string.Empty;
+                var node = currNode;
+                while (node.Parent is not null)
                 {
-                    Console.Write(currNode.Move);
-                    currNode = currNode.Parent;
+                    path += node.Move;
+                    node = node.Parent;
                 }
 
-                Console.WriteLine();
+                path = string.Concat(path.Reverse().ToArray());
 
-                return new SolveResult();
+                return new SolveResult
+                {
+                    Solution = path,
+                    MaxDepth = visited.Max(x => x.G),
+                    AmountOfVisitedStates = visited.Count,
+                    AmountOfProcessedStates = processedStates
+                };
             }
 
             if (currNode.G == _maxDepth)
@@ -54,6 +56,7 @@ public class DepthFirstSolver : ISolver
 
             foreach (var move in _order.Reverse())
             {
+                processedStates++;
                 var newBoard = new Board(currNode.Board);
 
                 if (!newBoard.Move(move))

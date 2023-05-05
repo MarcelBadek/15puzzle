@@ -13,6 +13,7 @@ public class AStarSolver : ISolver
 
     public SolveResult Solve(Board board)
     {
+        var processedStates = 0;
         var startNode = new Node()
         {
             Board = board,
@@ -33,22 +34,27 @@ public class AStarSolver : ISolver
 
             if (current.H == 0)
             {
-                while (current.Parent is not null)
+                var node = current;
+                while (node.Parent is not null)
                 {
-                    path += current.Move;
-                    current = current.Parent;
+                    path += node.Move;
+                    node = node.Parent;
                 }
 
-                path = string.Concat(path.ToCharArray().Reverse());
+                path = string.Concat(path.Reverse().ToArray());
 
                 return new SolveResult
                 {
-                    Solution = path
+                    Solution = path,
+                    MaxDepth = current.G,
+                    AmountOfVisitedStates = visited.Count,
+                    AmountOfProcessedStates = processedStates
                 };
             }
 
             foreach (var move in order)
             {
+                processedStates++;
                 // ten przypadek istnieje - uno ruch
                 if (current.Move == Helper.GetReverseMove(move))
                 {
