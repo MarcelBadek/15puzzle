@@ -20,9 +20,8 @@ public class AStarSolver : ISolver
             H = _heuristic.Calculate(board)
         };
         var openList = new PriorityQueue<Node, int>();
-        var visited = new List<Node>();
+        var visited = new Dictionary<string, Node>();
         const string order = "LURD";
-        var iter = 0;
         var path = string.Empty;
 
         openList.Enqueue(startNode, startNode.F);
@@ -30,14 +29,7 @@ public class AStarSolver : ISolver
         while (true)
         {
             var current = openList.Dequeue();
-            visited.Add(current);
-
-            Console.WriteLine(++iter);
-            // Console.WriteLine(minVal.H);
-            // minVal.Board.DisplayBoard();
-            // Console.WriteLine();
-            // Console.ReadKey();
-            Console.WriteLine("F:" + current.F);
+            visited.Add(current.Board.ToString(), current);
 
             if (current.H == 0)
             {
@@ -72,7 +64,7 @@ public class AStarSolver : ISolver
                 }
 
                 // ten przypadek istnieje - juz sprawdzony
-                var alreadyVisited = visited.Any(x => Helper.CompareBoards(x.Board, newBoard));
+                var alreadyVisited = visited.ContainsKey(newBoard.ToString());
                 if (alreadyVisited)
                 {
                     continue;

@@ -23,7 +23,7 @@ public class Puzzle
         const string order = "LURD";
         var iter = 0;
 
-        if (mainNode.Board.CheckBoard())
+        if (startNode.Board.CheckBoard())
         {
             return;
         }
@@ -161,7 +161,6 @@ public class Puzzle
     {
         var iter = 0;
         var stack = new Stack<Node>();
-        //var visited = new List<Node>();
         var currNode = new Node(Board)
         {
             G = 0
@@ -217,7 +216,7 @@ public class Puzzle
         }
     }
 
-    public bool DepthFirstSearch(string order, int maxDepth, int currentDepth = 0, Node? currNode = null)
+    public bool DepthFirstSearchRec(string order, int maxDepth, int currentDepth = 0, Node? currNode = null)
     {
         Node currentNode;
         if (currentDepth == 0)
@@ -243,7 +242,6 @@ public class Puzzle
             return true;
         }
 
-        openList.Enqueue(mainNode);
 
         if (currentDepth == maxDepth)
         {

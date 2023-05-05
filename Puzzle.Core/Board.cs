@@ -1,4 +1,6 @@
-﻿namespace Puzzle.Core;
+﻿using System.Text;
+
+namespace Puzzle.Core;
 
 public class Board
 {
@@ -138,7 +140,22 @@ public class Board
         {
             return true;
         }
-        
+
         return false;
+    }
+
+    public override string ToString()
+    {
+        var builder = new StringBuilder();
+        for (var i = 0; i < Rows; i++)
+        {
+            for (var j = 0; j < Columns; j++)
+            {
+                builder.Append(Fields[i, j]);
+                builder.Append(' ');
+            }
+        }
+
+        return builder.ToString();
     }
 }
