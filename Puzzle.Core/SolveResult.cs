@@ -9,14 +9,18 @@ public class SolveResult
 
     public void CreateSolutionFile(string fileName)
     {
-        using var file = new StreamWriter(fileName);
+        var dict = Directory.GetCurrentDirectory();
+        var fullPath = Path.Combine(dict, fileName);
+        using var file = new StreamWriter(fullPath);
         file.WriteLine(Solution.Length);
         file.WriteLine(Solution);
     }
 
     public void CreateStatisticsFile(string fileName, double time)
     {
-        using var file = new StreamWriter(fileName);
+        var dict = Directory.GetCurrentDirectory();
+        var fullPath = Path.Combine(dict, fileName);
+        using var file = new StreamWriter(fullPath);
         file.WriteLine(Solution.Length);
         file.WriteLine(AmountOfVisitedStates);
         file.WriteLine(AmountOfProcessedStates);

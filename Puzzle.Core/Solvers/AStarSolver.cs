@@ -70,6 +70,12 @@ public class AStarSolver : ISolver
                     continue;
                 }
 
+                var isInQueue = openList.UnorderedItems.Any(x => x.Element.Board.ToString() == newBoard.ToString());
+                if (isInQueue)
+                {
+                    continue;
+                }
+
                 var newNode = new Node()
                 {
                     Board = newBoard,
